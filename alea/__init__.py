@@ -1,2 +1,2 @@
-from .random_variable import DiscreteRandomVariable
-from .distributions import *
+from .randvar import *
+from . import discrete
