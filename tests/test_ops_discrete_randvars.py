@@ -52,6 +52,7 @@ class TestConstantMultiply:
         Y = X * 100
         assert(almost_equal(Y.variance(), 240000))
 
+
 class TestExponentiation:
 
     def test_bernoulli_moments(self):
@@ -60,6 +61,7 @@ class TestExponentiation:
         for i in range(2, 20):
             Y = X ** i
             assert(almost_equal(Y.mean(), 0.6))
+
 
     def test_binomial_moments(self):
         # Use exponentiation to calculate the second & third moments of X
@@ -71,6 +73,7 @@ class TestExponentiation:
         Np = N * p
         assert(almost_equal(Y.mean(), Np * (1 - p + Np)))
         assert(almost_equal(Z.mean(), Np * (1 - 3 * p + 3 * Np + 2 * p * p - 3 * Np * p + Np * Np)))
+
 
     def test_binomial_central_moments(self):
         # Use exponential and subtraction to calculate the 
