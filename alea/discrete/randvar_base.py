@@ -4,7 +4,7 @@ import numpy as np
 
 from ..randvar import RandVar
 
-class DiscreteRandVar(RandVar):
+class BaseDiscreteRandVar(RandVar):
 
     def __init__(self, sample_space, mass_function):
         RandVar.__init__(self)

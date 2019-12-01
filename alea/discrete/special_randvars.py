@@ -1,28 +1,8 @@
-from .discrete_randvar import DiscreteRandVar
-from .sum_randvars import ConstantSumDiscreteRandVar
+from .randvar_operations import DiscreteRandVar
 
 import random
 
-class RootDiscreteRandVar(DiscreteRandVar):
-
-    def __init__(self, sample_space, mass_function):
-        DiscreteRandVar.__init__(self, sample_space, mass_function)
-
-
-    def __add__(self, obj):
-        if isinstance(obj, int) or isinstance(obj, float):
-            return ConstantSumDiscreteRandVar(self, obj)
-        # TODO: Add support for discrete random variables 
-        else:
-            raise ValueError("Right operand must be a constant or random variable")
-
-
-    def __mul__(self, obj):
-        # TODO: Generic multiplication for constants, other discrete random variables
-        pass
-
-
-class BernoulliRandVar(RootDiscreteRandVar):
+class BernoulliRandVar(DiscreteRandVar):
 
     def __init__(self, success_rate):
 
@@ -32,7 +12,7 @@ class BernoulliRandVar(RootDiscreteRandVar):
             else:
                 return success_rate
 
-        RootDiscreteRandVar.__init__(self, {0, 1}, pmf)
+        DiscreteRandVar.__init__(self, {0, 1}, pmf)
         self.success_rate = success_rate
 
 
@@ -49,7 +29,7 @@ class BernoulliRandVar(RootDiscreteRandVar):
         return self.success_rate * (1 - self.success_rate)
 
 
-class BinomialRandVar(RootDiscreteRandVar):
+class BinomialRandVar(DiscreteRandVar):
 
     def __init__(self, trials, success_rate):
 
@@ -68,7 +48,7 @@ class BinomialRandVar(RootDiscreteRandVar):
                     return 0
             return choose(trials, x) * (success_rate ** x) * ((1 - success_rate) ** (trials - x))
 
-        RootDiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
+        DiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
         self.trials = trials
         self.success_rate = success_rate
 
@@ -90,11 +70,11 @@ class BinomialRandVar(RootDiscreteRandVar):
         return self.trials * self.success_rate * (1 - self.success_rate)
 
 
-class UniformRandVar(RootDiscreteRandVar):
+class UniformRandVar(DiscreteRandVar):
 
     def __init__(self, sample_space):
         p = 1 / len(sample_space)
-        RootDiscreteRandVar.__init__(self, sample_space, lambda x : p)
+        DiscreteRandVar.__init__(self, sample_space, lambda x : p)
 
 
     def _new_sample(self):

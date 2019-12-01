@@ -1,6 +1,6 @@
 import pytest
 
-from alea.discrete import RootDiscreteRandVar
+from alea.discrete import DiscreteRandVar
 
 class TestDiscrete:
 
@@ -13,7 +13,7 @@ class TestDiscrete:
 
         coin_ss = {-1, 1}
 
-        X = RootDiscreteRandVar(coin_ss, coin_mf)
+        X = DiscreteRandVar(coin_ss, coin_mf)
 
         assert (X.mean() == 0)
 
@@ -26,6 +26,6 @@ class TestDiscrete:
 
         coin_ss = {-1, 1}
 
-        X = RootDiscreteRandVar(coin_ss, coin_mf)
+        X = DiscreteRandVar(coin_ss, coin_mf)
 
         assert (X.variance() == 1)

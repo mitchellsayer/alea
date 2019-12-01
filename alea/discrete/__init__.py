@@ -1,3 +1,2 @@
-from .discrete_randvar import *
-from .root_randvars import *
-from .sum_randvars import *
+from .randvar_operations import *
+from .special_randvars import *
