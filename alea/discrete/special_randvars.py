@@ -1,6 +1,7 @@
 from .discrete_randvar import DiscreteRandVar
 
 import random
+import math
 
 
 class BernoulliRandVar(DiscreteRandVar):
@@ -37,6 +38,10 @@ class BinomialRandVar(DiscreteRandVar):
         def pmf(x):
             # https://stackoverflow.com/questions/3025162/statistics-combinations-in-python 
             def choose(n, k):
+                if math.isclose(n, math.floor(n)):
+                    n = int(n)
+                if math.isclose(k, math.floor(k)):
+                    k = int(k)
                 if 0 <= k <= n:
                     ntok = 1
                     ktok = 1
