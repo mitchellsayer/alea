@@ -19,3 +19,16 @@ class TestConstantSum:
         X = BinomialRandVar(100000, 0.6)
         Y = X + 100
         assert(almost_equal(Y.variance(), 24000))
+
+class TestConstantMultiply:
+
+    def test_mean(self):
+        X = BinomialRandVar(100, 0.6)
+        Y = X * 100
+        assert(almost_equal(Y.mean(), 6000))
+
+
+    def test_variance(self):
+        X = BinomialRandVar(100, 0.6)
+        Y = X * 100
+        assert(almost_equal(Y.variance(), 240000))
