@@ -5,9 +5,10 @@ from collections import deque
 class RandVar(ABC):
 
     def __init__(self):
+        self.saved_sample = None
         self.saved_mean = None
         self.saved_variance = None
-        self.saved_sample = None
+        self.saved_covariances = {}
         self.parents = set()
         self.children = WeakSet()
 
@@ -48,6 +49,15 @@ class RandVar(ABC):
         return self.saved_variance
 
 
+    def covariance(self, rv):
+        if rv in self.saved_covariances:
+            result = self.saved_covariances[rv]
+        else:
+            result = self._new_covariance(rv)
+            self.saved_covariances[rv] = result
+        return result
+
+
     @abstractmethod
     def _new_mean(self):
         pass
@@ -60,6 +70,11 @@ class RandVar(ABC):
 
     @abstractmethod
     def _new_sample(self):
+        pass
+
+
+    @abstractmethod
+    def _new_covariance(self):
         pass
 
 

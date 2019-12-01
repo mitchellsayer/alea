@@ -49,3 +49,22 @@ class BaseDiscreteRandVar(RandVar):
             p = self._get_probability(x)
             variance += x**2 * p
         return variance - self.mean()**2
+
+
+    def _new_covariance(self, rv):
+        # Covariance is equal to E[XY] - E[X]E[Y] 
+        if isinstance(self, BaseDiscreteRandVar):
+            # For discrete random variables, 
+            # E[XY] can be calculated using the transformation theorem
+            xy_mean = 0
+            for x in self.sample_space:
+                for y in rv.sample_space:
+                    p = self._get_probability(x) * rv._get_probability(y)
+                    xy_mean += x * y * p
+        else:
+            # For hybrid or continuous covariances, we should refer
+            # potentially to the joint probability distribution of the
+            # new random variable, XY
+            xy_mean = (self * rv).mean()
+        return xy_mean - self.mean() * rv.mean()
+
