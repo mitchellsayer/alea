@@ -6,11 +6,16 @@ from alea.discrete import BinomialRandVar
 def almost_equal(x, y):
     return abs(x - y) <= 1e-5
 
-class TestBinomial:
+
+class TestConstantSum:
+
     def test_mean(self):
         X = BinomialRandVar(100000, 0.6)
-        assert(almost_equal(X.mean(), 60000))
+        Y = X + 100
+        assert(almost_equal(Y.mean(), 60100))
 
-    def test_variable(self):
+
+    def test_variance(self):
         X = BinomialRandVar(100000, 0.6)
-        assert(almost_equal(X.variance(), 24000))
+        Y = X + 100
+        assert(almost_equal(Y.variance(), 24000))

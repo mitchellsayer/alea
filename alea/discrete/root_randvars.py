@@ -1,34 +1,58 @@
 from .discrete_randvar import DiscreteRandVar
+from .sum_randvars import ConstantSumDiscreteRandVar
 
 import random
 
-class BernoulliRandVar(DiscreteRandVar):
+class RootDiscreteRandVar(DiscreteRandVar):
+
+    def __init__(self, sample_space, mass_function):
+        DiscreteRandVar.__init__(self, sample_space, mass_function)
+
+
+    def __add__(self, obj):
+        if isinstance(obj, int) or isinstance(obj, float):
+            return ConstantSumDiscreteRandVar(self, obj)
+        # TODO: Add support for discrete random variables 
+        else:
+            raise ValueError("Right operand must be a constant or random variable")
+
+
+    def __mul__(self, obj):
+        # TODO: Generic multiplication for constants, other discrete random variables
+        pass
+
+
+class BernoulliRandVar(RootDiscreteRandVar):
 
     def __init__(self, success_rate):
+
         def pmf(x):
             if x == 0:
                 return 1 - success_rate
             else:
                 return success_rate
-        DiscreteRandVar.__init__(self, {0, 1}, pmf)
+
+        RootDiscreteRandVar.__init__(self, {0, 1}, pmf)
         self.success_rate = success_rate
 
 
-    def _get_sample(self):
+    def _new_sample(self):
+        assert(len(self.parents) == 0)
         return 1 if random.uniform(0, 1) < self.success_rate else 0
 
 
-    def _get_mean(self):
+    def _new_mean(self):
         return self.success_rate
 
 
-    def _get_variance(self):
+    def _new_variance(self):
         return self.success_rate * (1 - self.success_rate)
 
 
-class BinomialRandVar(DiscreteRandVar):
+class BinomialRandVar(RootDiscreteRandVar):
 
     def __init__(self, trials, success_rate):
+
         def pmf(x):
             # https://stackoverflow.com/questions/3025162/statistics-combinations-in-python 
             def choose(n, k):
@@ -43,12 +67,14 @@ class BinomialRandVar(DiscreteRandVar):
                 else:
                     return 0
             return choose(trials, x) * (success_rate ** x) * ((1 - success_rate) ** (trials - x))
-        DiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
+
+        RootDiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
         self.trials = trials
         self.success_rate = success_rate
 
 
-    def _get_sample(self):
+    def _new_sample(self):
+        assert(len(self.parents) == 0)
         successes = 0
         for _ in self.trials:
             if random.uniform(0, 1) < self.success_rate:
@@ -56,20 +82,21 @@ class BinomialRandVar(DiscreteRandVar):
         return successes
 
 
-    def _get_mean(self):
+    def _new_mean(self):
         return self.trials * self.success_rate
 
 
-    def _get_variance(self):
+    def _new_variance(self):
         return self.trials * self.success_rate * (1 - self.success_rate)
 
 
-class UniformRandVar(DiscreteRandVar):
+class UniformRandVar(RootDiscreteRandVar):
 
     def __init__(self, sample_space):
         p = 1 / len(sample_space)
-        DiscreteRandVar.__init__(self, sample_space, lambda x : p)
+        RootDiscreteRandVar.__init__(self, sample_space, lambda x : p)
 
 
-    def _get_sample(self):
+    def _new_sample(self):
+        assert(len(self.parents) == 0)
         return random.choice(self.sample_space)

@@ -22,13 +22,18 @@ class DiscreteRandVar(RandVar):
             return p
 
 
-    def _get_sample(self):
+    def _new_sample(self):
+        # By default, we assume that we are choosing from the random
+        # variable's probability distribution. This, in turn, assumes 
+        # that this random variable does not have any parents and thus
+        # represents an independent, real-world event
+        assert(len(self.parents) == 0)
         elements = list(self.sample_space)
         probabilities = [self._get_probability(x) for x in elements]
         return np.random.choice(elements, 1, p=probabilities)[0]
 
 
-    def _get_mean(self):
+    def _new_mean(self):
         mean = 0
         for x in self.sample_space:
             p = self._get_probability(x)
@@ -36,24 +41,11 @@ class DiscreteRandVar(RandVar):
         return mean
 
 
-    def _get_variance(self):
+    def _new_variance(self):
+        # Variance is calculated by doing E[X^2] - E[X]^2
+        # E[X^2] can be calculated using the transformation theorem.
         variance = 0
         for x in self.sample_space:
             p = self._get_probability(x)
             variance += x**2 * p
         return variance - self.mean()**2
-
-
-    def __add__(self, obj):
-        # TODO: Generic addition for constants, other discrete random variables
-        pass
-
-
-    def __sub__(self, obj):
-        # TODO: Generic subtraction for constants, other discrete random variables
-        pass
-
-
-    def __mul__(self, obj):
-        # TODO: Generic multiplication for constants, other discrete random variables
-        pass
