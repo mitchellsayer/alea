@@ -1,4 +1,4 @@
-from .randvar_operations import DiscreteRandVar
+from .discrete_randvar import DiscreteRandVar
 
 import random
 
