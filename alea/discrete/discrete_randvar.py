@@ -86,7 +86,6 @@ class DiscreteRandVar(RandVar):
             raise ValueError("Right operand must be a constant or random variable")
 
 
-
 class ConstantPlusDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv, c):
@@ -149,7 +148,6 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 
     def _new_variance(self):
         return self.rv1.variance() + self.rv2.variance() + 2 * self.rv1.covariance(self.rv2)
-
 
 
 class ConstantTimesDiscreteRandVar(DiscreteRandVar):

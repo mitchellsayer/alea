@@ -2,6 +2,7 @@ from .discrete_randvar import DiscreteRandVar
 
 import random
 
+
 class BernoulliRandVar(DiscreteRandVar):
 
     def __init__(self, success_rate):
