@@ -58,7 +58,8 @@ class TestDiscreteMultiply:
     def test_mean(self):
         X = BinomialRandVar(1, 0.5)
         Y = BinomialRandVar(1, 0.5)
-        Z = X * (X + Y)
+        # Z = X * (X + Y)
+        Z = X ** 2 + X * Y
         assert(almost_equal(Z.mean(), Z.sample_average()))
 
 
