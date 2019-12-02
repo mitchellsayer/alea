@@ -62,7 +62,7 @@ class BinomialRandVar(DiscreteRandVar):
     def _new_sample(self):
         assert(len(self.parents) == 0)
         successes = 0
-        for _ in self.trials:
+        for _ in range(self.trials):
             if random.uniform(0, 1) < self.success_rate:
                 successes += 1
         return successes

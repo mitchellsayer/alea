@@ -53,6 +53,15 @@ class TestConstantMultiply:
         assert(almost_equal(Y.variance(), 240000))
 
 
+class TestDiscreteMultiply:
+
+    def test_mean(self):
+        X = BinomialRandVar(1, 0.5)
+        Y = BinomialRandVar(1, 0.5)
+        Z = X * (X + Y)
+        assert(almost_equal(Z.mean(), Z.sample_average()))
+
+
 class TestExponentiation:
 
     def test_bernoulli_moments(self):

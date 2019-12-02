@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from weakref import WeakSet
 from collections import deque
 
+
 class RandVar(ABC):
 
     def __init__(self):
@@ -35,6 +36,15 @@ class RandVar(ABC):
         while len(queue) > 0:
             curr = queue.popleft()
             curr.saved_sample = curr._new_sample()
+            queue.extend(curr.children)
+
+
+    def sample_average(self, n=10000):
+        mean = 0
+        for _ in range(n):
+            self.resample()
+            mean += self.sample() / n
+        return mean
 
 
     def mean(self):
