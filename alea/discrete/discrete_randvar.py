@@ -54,19 +54,7 @@ class DiscreteRandVar(RandVar):
 
     def _new_covariance(self, rv):
         # Covariance is equal to E[XY] - E[X]E[Y] 
-        if isinstance(self, DiscreteRandVar):
-            # E[XY] can be calculated using the transformation theorem
-            # provided that X and Y are both discrete random variables
-            product_mean = 0
-            for x in self.sample_space:
-                for y in rv.sample_space:
-                    p = self._get_probability(x) * rv._get_probability(y)
-                    product_mean += x * y * p
-        else:
-            # Handle the general case by simply multiplying the two
-            # random variables together and taking the mean of their product
-            product_mean = (self * rv).mean()
-        return product_mean - self.mean() * rv.mean()
+        return (self * rv).mean() - self.mean() * rv.mean()
 
 
     def __add__(self, obj):
@@ -216,14 +204,9 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
 
     def _new_mean(self):
-        # Applying transformation theorem to calculate E[XY].
-        mean = 0
-        for x in self.rv1.sample_space:
-            px = self.rv1._get_probability(x)
-            for y in self.rv2.sample_space:
-                py = self.rv2._get_probability(y)
-                mean += px * py * x * y
-        return mean
+        # FIXME: rv1 and rv2 can be dependent random variables 
+        # This means that rv1 shares some root random variables with rv2
+        pass
 
 
 class ExponentDiscreteRandVar(DiscreteRandVar):
