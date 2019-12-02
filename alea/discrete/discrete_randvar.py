@@ -81,7 +81,8 @@ class DiscreteRandVar(RandVar):
     def __mul__(self, obj):
         if isinstance(obj, int) or isinstance(obj, float):
             return ConstantTimesDiscreteRandVar(self, obj)
-        # TODO: Add support for discrete random variables 
+        elif isinstance(obj, DiscreteRandVar):
+            return DiscreteTimesDiscreteRandVar(self, obj)
         else:
             raise ValueError("Right operand must be a constant or random variable")
 
@@ -184,6 +185,45 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 
     def _new_variance(self):
         return self.rv.variance() * self.c * self.c
+
+
+class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
+
+    def __init__(self, rv1, rv2):
+        mapping = collections.defaultdict(set)
+        for x in rv1.sample_space:
+            for y in rv2.sample_space:
+                mapping[x * y].add((x, y))
+
+        def pmf(x):
+            combs = mapping[x]
+            probs = [rv1._get_probability(y) * rv2._get_probability(z) for (y, z) in combs]
+            return sum(probs)
+
+        DiscreteRandVar.__init__(self, set(mapping.keys()), pmf)
+        self.rv1 = rv1
+        self.rv2 = rv2
+
+        rv1.children.add(self)
+        rv2.children.add(self)
+        self.parents.add(rv1)
+        self.parents.add(rv2)
+
+
+    def _new_sample(self):
+        assert(len(self.parents) == 2)
+        return self.rv1.sample() * self.rv2.sample()
+
+
+    def _new_mean(self):
+        # Applying transformation theorem to calculate E[XY].
+        mean = 0
+        for x in self.rv1.sample_space:
+            px = self.rv1._get_probability(x)
+            for y in self.rv2.sample_space:
+                py = self.rv2._get_probability(y)
+                mean += px * py * x * y
+        return mean
 
 
 class ExponentDiscreteRandVar(DiscreteRandVar):
