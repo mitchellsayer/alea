@@ -53,11 +53,18 @@ class DiscreteRandVar(RandVar):
 
 
     def __pow__(self, num):
+        # For now, perform exponentiation by squaring, reducing
+        # exponentiation to logarithmic time
         if not isinstance(num, int):
             raise ValueError("Right operand must be an integer")
         if num < 1:
             raise ValueError("Exponent must be greater than zero")
-        return ExponentDiscreteRandVar(self, num)
+        elif num == 1:
+            return self
+        elif num % 2 == 0:
+            return (self * self) ** (num // 2)
+        else:
+            return self * (self ** (num - 1))
 
 
 class ConstantPlusDiscreteRandVar(DiscreteRandVar):
@@ -226,43 +233,4 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
                 weight *= prob
                 fixes[srv] = fix
             mean += weight * self.rv1.mean(fixes) * self.rv2.mean(fixes)
-        return mean
-
-
-class ExponentDiscreteRandVar(DiscreteRandVar):
-
-    def __init__(self, rv, power):
-
-        def pmf(x):
-            root = x ** (1 / float(power))
-            if power % 2 == 1:
-                return rv._get_probability(root)
-            else:
-                prob1 = rv._get_probability(root) if root in rv.sample_space else 0
-                prob2 = rv._get_probability(-root) if -root in rv.sample_space else 0
-                return prob1 + prob2
-
-        DiscreteRandVar.__init__(self, {(x ** power) for x in rv.sample_space}, pmf)
-        self.rv = rv
-        self.power = power
-
-        rv.children.add(self)
-        self.parents.add(rv)
-
-
-    def _new_sample(self):
-        assert(len(self.parents) == 1)
-        return self.rv.sample() ** self.power
-
-
-    def _new_mean(self, fixed_means):
-        if self.rv in fixed_means:
-            return fixed_means[self.rv] ** self.power
-        # Applying transformation theorem to calculate E[X^n].
-        # Should be slightly faster than naive approach because
-        # integer-valued exponentiations can be done in log time.
-        mean = 0
-        for x in self.rv.sample_space:
-            p = self.rv._get_probability(x)
-            mean += p * (x ** self.power)
         return mean

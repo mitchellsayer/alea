@@ -100,7 +100,7 @@ class TestDiscreteMultiply:
         Z = X * (X * (X + Y))
         Z2 = (X ** 3) + (X ** 2) * Y
         assert(almost_equal(Z.mean(), Z2.mean()))
-        # assert(almost_equal(Z.variance(), Z2.variance()))
+        assert(almost_equal(Z.variance(), Z2.variance()))
 
 
     def test_foil(self):
@@ -109,7 +109,7 @@ class TestDiscreteMultiply:
         Z = (X + Y) * (X + Y)
         Z2 = (X * X) + (X * Y) + (X * Y) + (Y * Y)
         assert(almost_equal(Z.mean(), Z2.mean()))
-        # assert(almost_equal(Z.variance(), Z2.variance()))
+        assert(almost_equal(Z.variance(), Z2.variance()))
 
 
     def test_slow_exponentiation(self):
@@ -118,4 +118,4 @@ class TestDiscreteMultiply:
         Z = X * X * X * X * X * X
         Z2 = X ** 6
         assert(almost_equal(Z.mean(), Z2.mean()))
-        # assert(almost_equal(Z.variance(), Z2.variance()))
+        assert(almost_equal(Z.variance(), Z2.variance()))
