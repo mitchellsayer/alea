@@ -3,8 +3,8 @@ import pytest
 from alea.discrete import BinomialRandVar
 
 
-def almost_equal(x, y):
-    return abs(x - y) <= 1e-5
+def almost_equal(x, y, epsilon=1e-5):
+    return abs(x - y) <= epsilon
 
 
 class TestConstantSum:

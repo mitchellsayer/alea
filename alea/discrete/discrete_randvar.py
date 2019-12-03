@@ -1,9 +1,7 @@
 from ..randvar import RandVar
-from collections import deque
+from collections import deque, defaultdict
 
 import copy
-import numpy as np
-import collections
 
 
 class DiscreteRandVar(RandVar):
@@ -97,7 +95,7 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
 class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv1, rv2):
-        mapping = collections.defaultdict(set)
+        mapping = defaultdict(set)
         for x in rv1.sample_space:
             for y in rv2.sample_space:
                 mapping[x + y].add((x, y))
@@ -159,7 +157,7 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv1, rv2):
-        mapping = collections.defaultdict(set)
+        mapping = defaultdict(set)
         for x in rv1.sample_space:
             for y in rv2.sample_space:
                 mapping[x * y].add((x, y))

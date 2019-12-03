@@ -60,6 +60,7 @@ class BinomialRandVar(RootDiscreteRandVar):
 
     def _new_sample(self):
         X = BernoulliRandVar(self.success_rate)
+        successes = 0
         for _ in range(self.trials):
             X.resample()
             successes += X.sample()
@@ -81,5 +82,7 @@ class UniformRandVar(RootDiscreteRandVar):
         RootDiscreteRandVar.__init__(self, sample_space, lambda x : p)
 
 
-    def _new_sample(self, fixed_means):
-        return random.choice(self.sample_space)
+    def _new_sample(self):
+        if self.elements is None:
+            self.elements = list(self.sample_space)
+        return random.choice(self.elements)

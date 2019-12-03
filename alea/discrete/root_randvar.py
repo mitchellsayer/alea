@@ -2,12 +2,14 @@ from .discrete_randvar import DiscreteRandVar
 
 import random
 import math
+import numpy as np
 
 
 class RootDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, sample_space, mass_function):
         DiscreteRandVar.__init__(self, sample_space, mass_function)
+        self.elements = None
 
 
     def _new_sample(self):
@@ -15,10 +17,10 @@ class RootDiscreteRandVar(DiscreteRandVar):
         # variable's probability distribution. This, in turn, assumes 
         # that this random variable does not have any parents and thus
         # represents an independent, real-world event
-        assert(len(self.parents) == 0)
-        elements = list(self.sample_space)
-        probabilities = [self._get_probability(x) for x in elements]
-        return np.random.choice(elements, 1, p=probabilities)[0]
+        if self.elements is None:
+            self.elements = list(self.sample_space)
+        probabilities = [self._get_probability(x) for x in self.elements]
+        return np.random.choice(self.elements, 1, p=probabilities)[0]
 
 
     def _new_mean(self, fixed_means):

@@ -3,11 +3,16 @@ import pytest
 from alea.discrete import BernoulliRandVar, BinomialRandVar, UniformRandVar
 
 
-def almost_equal(x, y):
-    return abs(x - y) <= 1e-5
+def almost_equal(x, y, epsilon=1e-5):
+    return abs(x - y) <= epsilon
 
 
 class TestBernoulli:
+
+    def test_sample_mean(self):
+        X = BernoulliRandVar(0.6)
+        assert(almost_equal(X.sample_average(), 0.6, 0.5))
+
 
     def test_mean(self):
         X = BernoulliRandVar(0.6)
@@ -21,6 +26,11 @@ class TestBernoulli:
 
 class TestBinomial:
 
+    def test_sample_mean(self):
+        X = BinomialRandVar(10, 0.6)
+        assert(almost_equal(X.sample_average(), 6, 0.5))
+
+
     def test_mean(self):
         X = BinomialRandVar(100000, 0.6)
         assert(almost_equal(X.mean(), 60000))
@@ -32,6 +42,13 @@ class TestBinomial:
 
 
 class TestUniform:
+
+    def test_sample_mean(self):
+        X = UniformRandVar({-2, 553, 43})
+        assert(almost_equal(X.sample_average(), 198, 10))
+        Y = UniformRandVar({1, 2, 3, 4, 5, 6})
+        assert(almost_equal(Y.sample_average(), 3.5, 0.5))
+
 
     def test_mean(self):
         X = UniformRandVar({-2, 553, 43})

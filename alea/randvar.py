@@ -113,11 +113,11 @@ class RandVar(ABC):
         pass
 
 
-    def __sub__(self, obj):
-        return self + (obj * -1)
-
-
     @abstractmethod
     def __pow__(self, num):
         pass
+
+
+    def __sub__(self, obj):
+        return self + (obj * -1)
 
