@@ -5,22 +5,19 @@ import copy
 
 
 class DiscreteRandVar(RandVar):
+    '''
+    A discrete random variable is a strict classification of random
+    variables. It fits either one of these two criteria:
+        1. Has a well-defined probability mass function and corresponding
+        sample space. We call this a 'root' discrete random variable. Think
+        of this variable as the result of an isolated, real-world experiment.
+        2. Is constructed using other discrete random variables, which may or
+        may not be roots. These constructions can include additions, multiplications,
+        subtractions, and arbitrary transformations.
 
-    def __init__(self, sample_space, mass_function):
-        RandVar.__init__(self)
-        self.sample_space = copy.copy(sample_space)
-        self.mass_function = mass_function
-        self.pcache = {}
-
-
-    def probability_of(self, x):
-        if x in self.pcache:
-            return self.pcache[x]
-        else:
-            p = self.mass_function(x)
-            self.pcache[x] = p
-            return p
-
+    Attributes:
+        Inherited attributes from RandVar
+    '''
 
     def _new_variance(self):
         # Variance is equal to E[X^2] - E[X]E[X]
@@ -68,11 +65,7 @@ class DiscreteRandVar(RandVar):
 class ConstantPlusDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv, c):
-
-        def pmf(x):
-            return rv.probability_of(x - c)
-
-        DiscreteRandVar.__init__(self, {x + c for x in rv.sample_space}, pmf)
+        DiscreteRandVar.__init__(self)
         self.rv = rv
         self.c = c
 
@@ -95,17 +88,7 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
 class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv1, rv2):
-        mapping = defaultdict(set)
-        for x in rv1.sample_space:
-            for y in rv2.sample_space:
-                mapping[x + y].add((x, y))
-
-        def pmf(x):
-            combs = mapping[x]
-            probs = [rv1.probability_of(y) * rv2.probability_of(z) for (y, z) in combs]
-            return sum(probs)
-
-        DiscreteRandVar.__init__(self, set(mapping.keys()), pmf)
+        DiscreteRandVar.__init__(self)
         self.rv1 = rv1
         self.rv2 = rv2
 
@@ -130,11 +113,7 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv, c):
-
-        def pmf(x):
-            return rv.probability_of(x / c)
-
-        DiscreteRandVar.__init__(self, {x * c for x in rv.sample_space}, pmf)
+        DiscreteRandVar.__init__(self)
         self.rv = rv
         self.c = c
 
@@ -157,17 +136,7 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, rv1, rv2):
-        mapping = defaultdict(set)
-        for x in rv1.sample_space:
-            for y in rv2.sample_space:
-                mapping[x * y].add((x, y))
-
-        def pmf(x):
-            combs = mapping[x]
-            probs = [rv1.probability_of(y) * rv2.probability_of(z) for (y, z) in combs]
-            return sum(probs)
-
-        DiscreteRandVar.__init__(self, set(mapping.keys()), pmf)
+        DiscreteRandVar.__init__(self)
         self.rv1 = rv1
         self.rv2 = rv2
 

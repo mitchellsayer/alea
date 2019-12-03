@@ -83,6 +83,6 @@ class UniformRandVar(RootDiscreteRandVar):
 
 
     def _new_sample(self):
-        if self.elements is None:
-            self.elements = list(self.sample_space)
-        return random.choice(self.elements)
+        if self.sample_list is None:
+            self.sample_list = list(self.sample_space)
+        return random.choice(self.sample_list)
