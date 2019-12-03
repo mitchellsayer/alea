@@ -31,12 +31,31 @@ class RandVar(ABC):
             else:
                 queue.extend(curr.parents)
 
-        # Perform one-pass BFS, resampling as we go
-        queue.extend(roots)
-        while len(queue) > 0:
-            curr = queue.popleft()
-            curr.saved_sample = curr._new_sample()
-            queue.extend(curr.children)
+        # Topologically sort the subgraph that is
+        # connected to the root nodes 
+        visited = set()
+        topo = deque()
+        # queue.extend(roots)
+        # while len(queue) > 0:
+        #     curr = queue.pop()
+        #     for child in curr.children:
+        #         if child not in visited:
+        #             queue.append(child)
+        #             visited.add(child)
+        #     topo.appendleft(curr)
+        def visit(node):
+            if node in visited:
+                return
+            for child in node.children:
+                visit(child)
+            visited.add(node)
+            topo.appendleft(node)
+        for node in roots:
+            visit(node)
+
+        # In topological order, generate new samples
+        for node in topo:
+            node.saved_sample = node._new_sample()
 
 
     def sample_average(self, n=10000):

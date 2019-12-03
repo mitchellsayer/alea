@@ -4,7 +4,7 @@ from alea.discrete import BinomialRandVar
 
 
 def almost_equal(x, y):
-    return abs(x - y) <= 1e-5
+    return abs(x - y) <= 1e-2
 
 
 class TestConstantSum:
@@ -100,7 +100,7 @@ class TestDiscreteMultiply:
         Z = X * (X * (X + Y))
         Z2 = (X ** 3) + (X ** 2) * Y
         assert(almost_equal(Z.mean(), Z2.mean()))
-        # assert(almost_equal(Z.mean(), Z2.sample_average()))
+        assert(almost_equal(Z.mean(), Z2.sample_average()))
 
 
     def test_foil(self):
