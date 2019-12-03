@@ -24,33 +24,9 @@ class DiscreteRandVar(RandVar):
             return p
 
 
-    def _new_sample(self):
-        # By default, we assume that we are choosing from the random
-        # variable's probability distribution. This, in turn, assumes 
-        # that this random variable does not have any parents and thus
-        # represents an independent, real-world event
-        assert(len(self.parents) == 0)
-        elements = list(self.sample_space)
-        probabilities = [self._get_probability(x) for x in elements]
-        return np.random.choice(elements, 1, p=probabilities)[0]
-
-
-    def _new_mean(self, fixed_means):
-        mean = 0
-        for x in self.sample_space:
-            p = self._get_probability(x)
-            mean += p * x
-        return mean
-
-
     def _new_variance(self):
-        # Variance is calculated by doing E[X^2] - E[X]^2
-        # E[X^2] can be calculated using the transformation theorem.
-        variance = 0
-        for x in self.sample_space:
-            p = self._get_probability(x)
-            variance += x ** 2 * p
-        return variance - self.mean() ** 2
+        # Variance is equal to E[X^2] - E[X]E[X]
+        return (self ** 2).mean() - self.mean() ** 2
 
 
     def _new_covariance(self, rv):
@@ -64,7 +40,7 @@ class DiscreteRandVar(RandVar):
         elif isinstance(obj, DiscreteRandVar):
             return DiscretePlusDiscreteRandVar(self, obj)
         else:
-            raise ValueError("Right operand must be a constant or random variable")
+            raise ValueError("Right operand must be constant or randvar")
 
 
     def __mul__(self, obj):
@@ -73,7 +49,7 @@ class DiscreteRandVar(RandVar):
         elif isinstance(obj, DiscreteRandVar):
             return DiscreteTimesDiscreteRandVar(self, obj)
         else:
-            raise ValueError("Right operand must be a constant or random variable")
+            raise ValueError("Right operand must be constant or randvar")
 
 
     def __pow__(self, num):

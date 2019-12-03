@@ -1,10 +1,10 @@
-from .discrete_randvar import DiscreteRandVar
+from .root_randvar import RootDiscreteRandVar
 
 import random
 import math
 
 
-class BernoulliRandVar(DiscreteRandVar):
+class BernoulliRandVar(RootDiscreteRandVar):
 
     def __init__(self, success_rate):
 
@@ -14,7 +14,7 @@ class BernoulliRandVar(DiscreteRandVar):
             else:
                 return success_rate
 
-        DiscreteRandVar.__init__(self, {0, 1}, pmf)
+        RootDiscreteRandVar.__init__(self, {0, 1}, pmf)
         self.success_rate = success_rate
 
 
@@ -31,7 +31,7 @@ class BernoulliRandVar(DiscreteRandVar):
         return self.success_rate * (1 - self.success_rate)
 
 
-class BinomialRandVar(DiscreteRandVar):
+class BinomialRandVar(RootDiscreteRandVar):
 
     def __init__(self, trials, success_rate):
 
@@ -54,7 +54,7 @@ class BinomialRandVar(DiscreteRandVar):
                     return 0
             return choose(trials, x) * (success_rate ** x) * ((1 - success_rate) ** (trials - x))
 
-        DiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
+        RootDiscreteRandVar.__init__(self, set(range(trials + 1)), pmf)
         self.trials = trials
         self.success_rate = success_rate
 
@@ -76,11 +76,11 @@ class BinomialRandVar(DiscreteRandVar):
         return self.trials * self.success_rate * (1 - self.success_rate)
 
 
-class UniformRandVar(DiscreteRandVar):
+class UniformRandVar(RootDiscreteRandVar):
 
     def __init__(self, sample_space):
         p = 1 / len(sample_space)
-        DiscreteRandVar.__init__(self, sample_space, lambda x : p)
+        RootDiscreteRandVar.__init__(self, sample_space, lambda x : p)
 
 
     def _new_sample(self, fixed_means):
