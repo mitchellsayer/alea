@@ -34,7 +34,7 @@ class DiscreteRandVar(RandVar):
         return np.random.choice(elements, 1, p=probabilities)[0]
 
 
-    def _new_mean(self):
+    def _new_mean(self, fixed_means):
         mean = 0
         for x in self.sample_space:
             p = self._get_probability(x)
@@ -48,8 +48,8 @@ class DiscreteRandVar(RandVar):
         variance = 0
         for x in self.sample_space:
             p = self._get_probability(x)
-            variance += x**2 * p
-        return variance - self.mean()**2
+            variance += x ** 2 * p
+        return variance - self.mean() ** 2
 
 
     def _new_covariance(self, rv):
@@ -103,8 +103,8 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
         return self.rv.sample() + self.c
 
 
-    def _new_mean(self):
-        return self.rv.mean() + self.c
+    def _new_mean(self, fixed_means):
+        return self.rv.mean(fixed_means) + self.c
 
 
     def _new_variance(self):
@@ -139,8 +139,8 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
         return self.rv1.sample() + self.rv2.sample()
 
 
-    def _new_mean(self):
-        return self.rv1.mean() + self.rv2.mean()
+    def _new_mean(self, fixed_means):
+        return self.rv1.mean(fixed_means) + self.rv2.mean(fixed_means)
 
 
     def _new_variance(self):
@@ -167,8 +167,8 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
         return self.rv.sample() * self.c
 
 
-    def _new_mean(self):
-        return self.rv.mean() * self.c
+    def _new_mean(self, fixed_means):
+        return self.rv.mean(fixed_means) * self.c
 
 
     def _new_variance(self):
@@ -203,10 +203,59 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
         return self.rv1.sample() * self.rv2.sample()
 
 
-    def _new_mean(self):
-        # FIXME: rv1 and rv2 can be dependent random variables 
-        # This means that rv1 shares some root random variables with rv2
-        pass
+    def _new_mean(self, fixed_means):
+
+        def find_roots(rv, accum):
+            if len(rv.parents) == 0:
+                accum.add(rv)
+            else:
+                for parent in rv.parents:
+                    find_roots(parent, accum)
+
+        roots1 = set()
+        roots2 = set()
+        find_roots(self.rv1, roots1)
+        find_roots(self.rv2, roots2)
+        shared_roots = list(roots1.intersection(roots2))
+
+        # If X and Y do not share any roots, then they are independent
+        # This implies that E[XY] = E[X]E[Y], which is a quick calculation
+        if len(shared_roots) == 0:
+            return self.rv1.mean(fixed_means) * self.rv2.mean(fixed_means)
+
+        # X and Y are dependent random variables! This would be impossible to calculate.
+        # However, we know that because X and Y are dependent, they must share at least
+        # one root discrete variable acting as a probabilistic generation.
+
+        # If we generate every possible combination that the shared roots can take, we 
+        # can make X and Y 'independent' again
+        cartesian_product = []
+        for srv in shared_roots:
+            if srv in fixed_means:
+                sample_space = [(fixed_means[srv], 1)]
+            else:
+                sample_space = [(x, srv._get_probability(x)) for x in srv.sample_space]
+            if len(cartesian_product) == 0:
+                cartesian_product = [[x] for x in sample_space]
+            else:
+                ncp = []
+                for xs in ncp:
+                    for x in sample_space:
+                        ncp.append(xs + [x])
+                cartesian_product = ncp
+        # Then, we use the law of total probability to calculate mean
+        mean = 0
+        for fixes in cartesian_product:
+            weight = 1
+            updated_fixed_means = copy.copy(fixed_means)
+            for i in range(len(shared_roots)):
+                srv = shared_roots[i]
+                (fix, prob) = fixes[i]
+                weight *= prob
+                updated_fixed_means[srv] = fix
+            mean += weight * self.rv1.mean(updated_fixed_means) * self.rv2.mean(updated_fixed_means)
+        return mean
+
 
 
 class ExponentDiscreteRandVar(DiscreteRandVar):
@@ -235,7 +284,9 @@ class ExponentDiscreteRandVar(DiscreteRandVar):
         return self.rv.sample() ** self.power
 
 
-    def _new_mean(self):
+    def _new_mean(self, fixed_means):
+        if self.rv in fixed_means:
+            return fixed_means[self.rv] ** self.power
         # Applying transformation theorem to calculate E[X^n].
         # Should be slightly faster than naive approach because
         # integer-valued exponentiations can be done in log time.

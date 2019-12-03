@@ -47,9 +47,13 @@ class RandVar(ABC):
         return mean
 
 
-    def mean(self):
+    def mean(self, fixed_means={}):
+        if self in fixed_means:
+            return fixed_means[self]
+        if len(fixed_means) > 0:
+            return self._new_mean(fixed_means)
         if self.saved_mean is None:
-            self.saved_mean = self._new_mean()
+            self.saved_mean = self._new_mean(fixed_means)
         return self.saved_mean
 
 
@@ -69,7 +73,7 @@ class RandVar(ABC):
 
 
     @abstractmethod
-    def _new_mean(self):
+    def _new_mean(self, fixed_means):
         pass
 
 

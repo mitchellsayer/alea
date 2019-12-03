@@ -23,7 +23,7 @@ class BernoulliRandVar(DiscreteRandVar):
         return 1 if random.uniform(0, 1) < self.success_rate else 0
 
 
-    def _new_mean(self):
+    def _new_mean(self, fixed_means):
         return self.success_rate
 
 
@@ -68,7 +68,7 @@ class BinomialRandVar(DiscreteRandVar):
         return successes
 
 
-    def _new_mean(self):
+    def _new_mean(self, fixed_means):
         return self.trials * self.success_rate
 
 
@@ -83,6 +83,6 @@ class UniformRandVar(DiscreteRandVar):
         DiscreteRandVar.__init__(self, sample_space, lambda x : p)
 
 
-    def _new_sample(self):
+    def _new_sample(self, fixed_means):
         assert(len(self.parents) == 0)
         return random.choice(self.sample_space)

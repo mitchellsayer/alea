@@ -53,16 +53,6 @@ class TestConstantMultiply:
         assert(almost_equal(Y.variance(), 240000))
 
 
-class TestDiscreteMultiply:
-
-    def test_mean(self):
-        X = BinomialRandVar(1, 0.5)
-        Y = BinomialRandVar(1, 0.5)
-        Z = X * (X + Y)
-        Zf = X ** 2 + X * Y
-        assert(almost_equal(Z.mean(), Zf.mean()))
-
-
 class TestExponentiation:
 
     def test_bernoulli_moments(self):
@@ -100,3 +90,29 @@ class TestExponentiation:
         assert(almost_equal(Yc.mean(), Np * q))
         assert(almost_equal(Zc.mean(), Np * q * (1 - 2 * p)))
         assert(almost_equal(Ac.mean(), Np * q * (3 * p * p * (2 - N) + 3 * p * (N - 2) + 1)))
+
+
+class TestDiscreteMultiply:
+
+    def test_small_foil(self):
+        X = BinomialRandVar(1, 0.5)
+        Y = BinomialRandVar(1, 0.5)
+        Z = X * (X * (X + Y))
+        Z2 = (X ** 3) + (X ** 2) * Y
+        assert(almost_equal(Z.mean(), Z2.mean()))
+
+
+    def test_complex_foil(self):
+        X = BinomialRandVar(1, 0.5)
+        Y = BinomialRandVar(1, 0.5)
+        Z = (X + Y) ** 2
+        Z2 = (X * X) + (X * Y) + (X * Y) + (Y * Y)
+        assert(almost_equal(Z.mean(), Z2.mean()))
+
+
+    def test_slow_exponentiation(self):
+        X = BinomialRandVar(1, 0.5)
+        Y = BinomialRandVar(1, 0.5)
+        Z = X * X * X * X * X * X
+        Z2 = X ** 6
+        assert(almost_equal(Z.mean(), Z2.mean()))
