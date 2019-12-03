@@ -94,18 +94,19 @@ class TestExponentiation:
 
 class TestDiscreteMultiply:
 
-    def test_small_foil(self):
+    def test_distributive_property(self):
         X = BinomialRandVar(1, 0.5)
         Y = BinomialRandVar(1, 0.5)
         Z = X * (X * (X + Y))
         Z2 = (X ** 3) + (X ** 2) * Y
         assert(almost_equal(Z.mean(), Z2.mean()))
+        # assert(almost_equal(Z.mean(), Z2.sample_average()))
 
 
-    def test_complex_foil(self):
+    def test_foil(self):
         X = BinomialRandVar(1, 0.5)
         Y = BinomialRandVar(1, 0.5)
-        Z = (X + Y) ** 2
+        Z = (X + Y) * (X + Y)
         Z2 = (X * X) + (X * Y) + (X * Y) + (Y * Y)
         assert(almost_equal(Z.mean(), Z2.mean()))
 

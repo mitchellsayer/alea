@@ -1,4 +1,5 @@
 from ..randvar import RandVar
+from collections import deque
 
 import copy
 import numpy as np
@@ -229,33 +230,27 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
         # If we generate every possible combination that the shared roots can take, we 
         # can make X and Y 'independent' again
-        cartesian_product = []
+        combinations = deque([[]])
         for srv in shared_roots:
             if srv in fixed_means:
-                sample_space = [(fixed_means[srv], 1)]
+                srv_space = [(fixed_means[srv], 1)]
             else:
-                sample_space = [(x, srv._get_probability(x)) for x in srv.sample_space]
-            if len(cartesian_product) == 0:
-                cartesian_product = [[x] for x in sample_space]
-            else:
-                ncp = []
-                for xs in ncp:
-                    for x in sample_space:
-                        ncp.append(xs + [x])
-                cartesian_product = ncp
+                srv_space = [(x, srv._get_probability(x)) for x in srv.sample_space]
+            level = len(combinations)
+            for _ in range(level):
+                xs = combinations.popleft()
+                for x in srv_space:
+                    combinations.append(xs + [x])
         # Then, we use the law of total probability to calculate mean
         mean = 0
-        for fixes in cartesian_product:
+        for fix_combination in combinations:
             weight = 1
-            updated_fixed_means = copy.copy(fixed_means)
-            for i in range(len(shared_roots)):
-                srv = shared_roots[i]
-                (fix, prob) = fixes[i]
+            fixes = copy.copy(fixed_means)
+            for (srv, (fix, prob)) in zip(shared_roots, fix_combination):
                 weight *= prob
-                updated_fixed_means[srv] = fix
-            mean += weight * self.rv1.mean(updated_fixed_means) * self.rv2.mean(updated_fixed_means)
+                fixes[srv] = fix
+            mean += weight * self.rv1.mean(fixes) * self.rv2.mean(fixes)
         return mean
-
 
 
 class ExponentDiscreteRandVar(DiscreteRandVar):
