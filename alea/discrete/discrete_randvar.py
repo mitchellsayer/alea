@@ -83,7 +83,6 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 1)
         return self.rv.sample() + self.c
 
 
@@ -119,7 +118,6 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 2)
         return self.rv1.sample() + self.rv2.sample()
 
 
@@ -147,7 +145,6 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 1)
         return self.rv.sample() * self.c
 
 
@@ -183,7 +180,6 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 2)
         return self.rv1.sample() * self.rv2.sample()
 
 

@@ -35,14 +35,6 @@ class RandVar(ABC):
         # connected to the root nodes 
         visited = set()
         topo = deque()
-        # queue.extend(roots)
-        # while len(queue) > 0:
-        #     curr = queue.pop()
-        #     for child in curr.children:
-        #         if child not in visited:
-        #             queue.append(child)
-        #             visited.add(child)
-        #     topo.appendleft(curr)
         def visit(node):
             if node in visited:
                 return

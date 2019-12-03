@@ -19,7 +19,6 @@ class BernoulliRandVar(RootDiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 0)
         return 1 if random.uniform(0, 1) < self.success_rate else 0
 
 
@@ -60,11 +59,10 @@ class BinomialRandVar(RootDiscreteRandVar):
 
 
     def _new_sample(self):
-        assert(len(self.parents) == 0)
-        successes = 0
+        X = BernoulliRandVar(self.success_rate)
         for _ in range(self.trials):
-            if random.uniform(0, 1) < self.success_rate:
-                successes += 1
+            X.resample()
+            successes += X.sample()
         return successes
 
 
@@ -84,5 +82,4 @@ class UniformRandVar(RootDiscreteRandVar):
 
 
     def _new_sample(self, fixed_means):
-        assert(len(self.parents) == 0)
         return random.choice(self.sample_space)
