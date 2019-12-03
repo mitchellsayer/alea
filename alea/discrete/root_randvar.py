@@ -19,14 +19,14 @@ class RootDiscreteRandVar(DiscreteRandVar):
         # represents an independent, real-world event
         if self.elements is None:
             self.elements = list(self.sample_space)
-        probabilities = [self._get_probability(x) for x in self.elements]
+        probabilities = [self.probability_of(x) for x in self.elements]
         return np.random.choice(self.elements, 1, p=probabilities)[0]
 
 
     def _new_mean(self, fixed_means):
         mean = 0
         for x in self.sample_space:
-            p = self._get_probability(x)
+            p = self.probability_of(x)
             mean += p * x
         return mean
 
@@ -34,6 +34,6 @@ class RootDiscreteRandVar(DiscreteRandVar):
     def _new_variance(self):
         variance = 0
         for x in self.sample_space:
-            p = self._get_probability(x)
+            p = self.probability_of(x)
             variance += x ** 2 * p
         return variance - self.mean() ** 2

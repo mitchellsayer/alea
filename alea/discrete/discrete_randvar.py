@@ -13,7 +13,7 @@ class DiscreteRandVar(RandVar):
         self.pcache = {}
 
 
-    def _get_probability(self, x):
+    def probability_of(self, x):
         if x in self.pcache:
             return self.pcache[x]
         else:
@@ -70,7 +70,7 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
     def __init__(self, rv, c):
 
         def pmf(x):
-            return rv._get_probability(x - c)
+            return rv.probability_of(x - c)
 
         DiscreteRandVar.__init__(self, {x + c for x in rv.sample_space}, pmf)
         self.rv = rv
@@ -102,7 +102,7 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
 
         def pmf(x):
             combs = mapping[x]
-            probs = [rv1._get_probability(y) * rv2._get_probability(z) for (y, z) in combs]
+            probs = [rv1.probability_of(y) * rv2.probability_of(z) for (y, z) in combs]
             return sum(probs)
 
         DiscreteRandVar.__init__(self, set(mapping.keys()), pmf)
@@ -132,7 +132,7 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
     def __init__(self, rv, c):
 
         def pmf(x):
-            return rv._get_probability(x / c)
+            return rv.probability_of(x / c)
 
         DiscreteRandVar.__init__(self, {x * c for x in rv.sample_space}, pmf)
         self.rv = rv
@@ -164,7 +164,7 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
         def pmf(x):
             combs = mapping[x]
-            probs = [rv1._get_probability(y) * rv2._get_probability(z) for (y, z) in combs]
+            probs = [rv1.probability_of(y) * rv2.probability_of(z) for (y, z) in combs]
             return sum(probs)
 
         DiscreteRandVar.__init__(self, set(mapping.keys()), pmf)
@@ -212,7 +212,7 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
             if srv in fixed_means:
                 srv_space = [(fixed_means[srv], 1)]
             else:
-                srv_space = [(x, srv._get_probability(x)) for x in srv.sample_space]
+                srv_space = [(x, srv.probability_of(x)) for x in srv.sample_space]
             level = len(combinations)
             for _ in range(level):
                 xs = combinations.popleft()
