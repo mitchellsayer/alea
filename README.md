@@ -1,12 +1,12 @@
 # alea
 
-alea is a Python package that provides a way to model random variables. 
+alea is a Python package that provides a way to succinctly model random variables. 
 
 Using fairly simplistic notation, you can construct complex, dependent random variables, 
 calculate an arbitrary random variable's mean, variance, and moments, and more. See below
 for a full features list.
 
-## Why Model Random Variables?
+## Why Use This?
 
 The concept of a random variable is central to the field of probability theory; 
 informally, a random variable is a mapping from the possible outcomes of a 
