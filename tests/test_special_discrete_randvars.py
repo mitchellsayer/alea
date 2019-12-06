@@ -1,6 +1,6 @@
 import pytest
 
-from alea.discrete import BernoulliRandVar, BinomialRandVar, UniformRandVar
+from alea.discrete import BernoulliRandVar, BinomialRandVar, UniformDiscreteRandVar
 
 
 def almost_equal(x, y, epsilon=1e-5):
@@ -44,21 +44,21 @@ class TestBinomial:
 class TestUniform:
 
     def test_sample_mean(self):
-        X = UniformRandVar({-2, 553, 43})
+        X = UniformDiscreteRandVar({-2, 553, 43})
         assert(almost_equal(X.sample_mean(), 198, 10))
-        Y = UniformRandVar({1, 2, 3, 4, 5, 6})
+        Y = UniformDiscreteRandVar({1, 2, 3, 4, 5, 6})
         assert(almost_equal(Y.sample_mean(), 3.5, 0.5))
 
 
     def test_mean(self):
-        X = UniformRandVar({-2, 553, 43})
+        X = UniformDiscreteRandVar({-2, 553, 43})
         assert(almost_equal(X.mean(), 198))
-        Y = UniformRandVar({1, 2, 3, 4, 5, 6})
+        Y = UniformDiscreteRandVar({1, 2, 3, 4, 5, 6})
         assert(almost_equal(Y.mean(), 3.5))
 
 
     def test_variance(self):
-        X = UniformRandVar({-2, 553, 43})
+        X = UniformDiscreteRandVar({-2, 553, 43})
         assert(almost_equal(X.variance(), 63350))
-        Y = UniformRandVar({1, 2, 3, 4, 5, 6})
+        Y = UniformDiscreteRandVar({1, 2, 3, 4, 5, 6})
         assert(almost_equal(Y.variance(), 2.916667))

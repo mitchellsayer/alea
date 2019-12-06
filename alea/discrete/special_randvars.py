@@ -75,7 +75,7 @@ class BinomialRandVar(RootDiscreteRandVar):
         return self.trials * self.success_rate * (1 - self.success_rate)
 
 
-class UniformRandVar(RootDiscreteRandVar):
+class UniformDiscreteRandVar(RootDiscreteRandVar):
 
     def __init__(self, sample_space):
         p = 1 / len(sample_space)

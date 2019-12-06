@@ -120,6 +120,7 @@ class TestDiscreteMultiply:
         assert(almost_equal(Z.mean(), Z2.mean()))
         assert(almost_equal(Z.variance(), Z2.variance()))
 
+
     def test_large_root_distributions(self):
         X = BinomialRandVar(30, 0.1)
         Y = BinomialRandVar(30, 0.2)
