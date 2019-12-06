@@ -1,6 +1,7 @@
 from ..randvar import RandVar
 from collections import deque, defaultdict
 
+import itertools
 import copy
 
 
@@ -176,23 +177,19 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
 
         # If we generate every possible combination that the shared roots can take, we 
         # can make X and Y 'independent' again
-        combinations = deque([[]])
+        srv_supports = []
         for srv in shared_roots:
             if srv in fixed_means:
                 srv_space = [(fixed_means[srv], 1)]
             else:
                 srv_space = [(x, srv.probability_of(x)) for x in srv.sample_space]
-            level = len(combinations)
-            for _ in range(level):
-                xs = combinations.popleft()
-                for x in srv_space:
-                    combinations.append(xs + [x])
+            srv_supports.append(srv_space)
         # Then, we use the law of total probability to calculate mean
         mean = 0
-        for fix_combination in combinations:
+        for combination in itertools.product(*srv_supports):
             weight = 1
             fixes = copy.copy(fixed_means)
-            for (srv, (fix, prob)) in zip(shared_roots, fix_combination):
+            for (srv, (fix, prob)) in zip(shared_roots, combination):
                 weight *= prob
                 fixes[srv] = fix
             mean += weight * self.rv1.mean(fixes) * self.rv2.mean(fixes)
