@@ -35,6 +35,15 @@ earnings = A + B
 print(earnings.mean())
 ```
 
+Alternatively, you could represent this as:
+
+```
+from alea.discrete import BinomialRandVar
+
+earnings = BinomialRandVar(4, 0.4) * 1150 - 150
+print(earnings.mean())
+```
+
 What if the scenario changes?
 
 > Now, the hedge fund is levered. If a fund is levered, this means that 
