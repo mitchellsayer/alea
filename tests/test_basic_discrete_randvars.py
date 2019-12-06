@@ -9,13 +9,13 @@ def almost_equal(x, y, epsilon=1e-5):
 
 class TestDiscrete:
 
-    def test_sample_average(self):
+    def test_sample_mean(self):
         support = {-1, 1}
         pmf = lambda x : 0.5 if x in support else 0
 
         X = RootDiscreteRandVar(support, pmf)
 
-        assert(almost_equal(X.sample_average(), 0, 1e-1))
+        assert(almost_equal(X.sample_mean(), 0, 1e-1))
 
 
     def test_mean(self):

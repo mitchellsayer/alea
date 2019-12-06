@@ -74,6 +74,10 @@ class ConstantPlusDiscreteRandVar(DiscreteRandVar):
         self.parents.add(rv)
 
 
+    def _new_roots(self):
+        return self.rv.roots()
+
+
     def _new_sample(self):
         return self.rv.sample() + self.c
 
@@ -99,6 +103,10 @@ class DiscretePlusDiscreteRandVar(DiscreteRandVar):
         self.parents.add(rv2)
 
 
+    def _new_roots(self):
+        return self.rv1.roots().union(self.rv2.roots())
+
+
     def _new_sample(self):
         return self.rv1.sample() + self.rv2.sample()
 
@@ -120,6 +128,10 @@ class ConstantTimesDiscreteRandVar(DiscreteRandVar):
 
         rv.children.add(self)
         self.parents.add(rv)
+
+
+    def _new_roots(self):
+        return self.rv.roots()
 
 
     def _new_sample(self):
@@ -147,24 +159,16 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
         self.parents.add(rv2)
 
 
+    def _new_roots(self):
+        return self.rv1.roots().union(self.rv2.roots())
+
+
     def _new_sample(self):
         return self.rv1.sample() * self.rv2.sample()
 
 
     def _new_mean(self, fixed_means):
-
-        def find_roots(rv, accum):
-            if len(rv.parents) == 0:
-                accum.add(rv)
-            else:
-                for parent in rv.parents:
-                    find_roots(parent, accum)
-
-        roots1 = set()
-        roots2 = set()
-        find_roots(self.rv1, roots1)
-        find_roots(self.rv2, roots2)
-        shared_roots = list(roots1.intersection(roots2))
+        shared_roots = list(self.rv1.roots().intersection(self.rv2.roots()))
 
         # If X and Y do not share any roots, then they are independent
         # This implies that E[XY] = E[X]E[Y], which is a quick calculation

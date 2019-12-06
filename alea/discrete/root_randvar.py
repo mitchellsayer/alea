@@ -25,6 +25,10 @@ class RootDiscreteRandVar(DiscreteRandVar):
             return p
 
 
+    def _new_roots(self):
+        return {self}
+
+
     def _new_sample(self):
         # By default, we assume that we are choosing from the random
         # variable's probability distribution. This, in turn, assumes 

@@ -34,6 +34,21 @@ class RandVar(ABC):
         self.saved_covariances = {}
         self.parents = set()
         self.children = WeakSet()
+        self.saved_roots = None
+
+
+    def roots(self):
+        '''
+        Finds the roots associated with the random variable. Root random variables
+        are direct mappings from a probability space. The roots of a random variable
+        will never change, so after they are found, they are simply cached.
+
+        Returns:
+            An immutable set of root random variables
+        '''
+        if self.saved_roots is None:
+            self.saved_roots = self._new_roots()
+        return self.saved_roots
 
 
     def sample(self):
@@ -66,16 +81,6 @@ class RandVar(ABC):
             to perform its own calculations.
         '''
 
-        # Identify root random variables
-        queue = deque([self])
-        roots = []
-        while len(queue) > 0:
-            curr = queue.popleft()
-            if len(curr.parents) == 0:
-                roots.append(curr)
-            else:
-                queue.extend(curr.parents)
-
         # Topologically sort the subgraph that is
         # connected to the root nodes 
         visited = set()
@@ -87,7 +92,7 @@ class RandVar(ABC):
                 visit(child)
             visited.add(node)
             topo.appendleft(node)
-        for node in roots:
+        for node in self.roots():
             visit(node)
 
         # In topological order, generate new samples
@@ -95,7 +100,7 @@ class RandVar(ABC):
             node.saved_sample = node._new_sample()
 
 
-    def sample_average(self, trials=10000):
+    def sample_mean(self, trials=10000):
         '''
         Performs a very crude estimate of the mean by simply
         sampling for {trial} amount of times and then averaging the
@@ -186,6 +191,20 @@ class RandVar(ABC):
             result = self._new_covariance(rv)
             self.saved_covariances[rv] = result
         return result
+
+
+    def _new_roots(self):
+        '''Default approach to use BFS to find sources of a graph'''
+
+        queue = deque([self])
+        roots= set()
+        while len(queue) > 0:
+            curr = queue.popleft()
+            if len(curr.parents) == 0:
+                roots.add(curr)
+            else:
+                queue.extend(curr.parents)
+        return roots
 
 
     @abstractmethod
