@@ -1,9 +1,9 @@
 # alea
 
-alea provides a way to create random variables that model real-world, probablistic 
-experiments and then perform operations on those random variables. You can construct
-new random variables, calculate a random variable's mean, variance, and moments, and
-determine covariances between random variables, among other actions. See below
+alea is a Python package that provides a way to model random variables 
+corresponding to real-world, probabilistic experiments. Using fairly simplistic notation, 
+you can construct complex, dependent random variables and calculate an arbitrary random 
+variable's mean, variance, and moments, among other actions. See below
 for a full features list.
 
 ## Why Model Random Variables?
@@ -20,8 +20,8 @@ or not that action is considered desirable. Observe the following scenario.
 > level with 40% probability, stay the same with 30% probability, and fall with
 > 30% probability. Stock B follows the same distribution and will rise and fall
 > independently of Stock A. You're offered separate but identical options contracts 
-> for A and B, where if the stock rises, you make $1000, but if not, you pay $150,
-> the premium on the contract. If you were to buy these contracts repeatedly on
+> for A and B, where if the stock rises, you make $1000 in profit, but if not, you 
+> pay $150, the premium on the contract. If you were to buy these contracts repeatedly on
 > different days, on average, how much money would you expect to make?
 
 With alea, you could model this scenario pretty easily:
