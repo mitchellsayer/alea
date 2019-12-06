@@ -1,2 +1,3 @@
-# alea
+# Alea
+======
 Functions and abstractions for random variables and vectors.
