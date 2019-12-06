@@ -16,6 +16,7 @@ class TestDiscrete:
         X = RootDiscreteRandVar(support, pmf)
 
         assert(almost_equal(X.sample_mean(), 0, 1e-1))
+        assert(almost_equal(X.sample_variance(), 1, 1e-1))
 
 
     def test_mean(self):

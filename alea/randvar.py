@@ -102,7 +102,7 @@ class RandVar(ABC):
 
     def sample_mean(self, trials=10000):
         '''
-        Performs a very crude estimate of the mean by simply
+        Performs a point estimate of the mean by simply
         sampling for {trial} amount of times and then averaging the
         samples. This will always work because of the law of
         large numbers.
@@ -122,8 +122,30 @@ class RandVar(ABC):
         mean = 0
         for _ in range(trials):
             self.resample()
-            mean += self.sample() / trials
-        return mean
+            mean += self.sample()
+        return mean / trials
+
+
+    def sample_variance(self, trials=10000):
+        '''
+        Performs a point estimate of the variance after calculating
+        an approximate mean. As with the sample mean, a large
+        number of samples will result in better approximation of
+        the variance but at a significant time cost.
+
+        Args:
+            trials: The number of samples to take
+
+        Returns:
+            An approximation of the mean
+        '''
+
+        mean = self.sample_mean(trials)
+        variance = 0
+        for _ in range(trials):
+            self.resample()
+            variance += (self.sample() - mean) ** 2
+        return variance / (trials - 1)
 
 
     def mean(self, fixed_means={}):
