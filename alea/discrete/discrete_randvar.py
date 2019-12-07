@@ -1,5 +1,4 @@
 from ..randvar import RandVar
-from collections import deque, defaultdict
 
 import itertools
 import copy
