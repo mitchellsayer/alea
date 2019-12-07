@@ -76,6 +76,8 @@ mathematics behind them.
 * Exponentation of a discrete random variable to an integer value
 * Theoretical mean, variance of a discrete random variable
 * Sample mean, variance of a discrete random variable
+* Randomly sampling a discrete random variable and its children
+* Covariance calculation between two random variables 
 
 See the issues section for future enhancements.
 
