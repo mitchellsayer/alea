@@ -69,7 +69,15 @@ mathematics behind them.
 
 ## Features List
 
-TODO
+* Arbitrary discrete random variables modelling an experiment
+* Special discrete random variables: Bernoulli, Binomial, Uniform distributions
+* Addition of two discrete random variables
+* Multiplication of two discrete random variables
+* Exponentation of a discrete random variable to an integer value
+* Theoretical mean, variance of a discrete random variable
+* Sample mean, variance of a discrete random variable
+
+See the issues section for future enhancements.
 
 ## Usage
 
