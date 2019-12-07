@@ -74,10 +74,11 @@ mathematics behind them.
 * Addition of two discrete random variables
 * Multiplication of two discrete random variables
 * Exponentation of a discrete random variable to an integer value
+* A unary function applied to a discrete random variable
 * Theoretical mean, variance of a discrete random variable
 * Sample mean, variance of a discrete random variable
 * Randomly sampling a discrete random variable and its children
-* Covariance calculation between two random variables 
+* Covariance calculation between two random variables
 
 See the issues section for future enhancements.
 
