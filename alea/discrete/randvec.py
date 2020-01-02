@@ -2,18 +2,13 @@ from ..randvec import RandVec
 from .root_randvar import RootDiscreteRandVar
 from .function_randvar import UnaryDiscreteRandVar
 
-import copy
-
 class DiscreteRandVec(RandVec):
     '''
-    A discrete random variable is a strict classification of random
-    variables. It fits either one of these two criteria:
-        1. Has a well-defined probability mass function and corresponding
-        sample space. We call this a 'root' discrete random variable. Think
-        of this variable as the result of an isolated, real-world experiment.
-        2. Is constructed using other discrete random variables, which may or
-        may not be roots. These constructions can include additions, multiplications,
-        subtractions, and arbitrary transformations.
+    A discrete random vector has a set of k-length vectors
+    describing its support along with a joint probability
+    distribution that maps each vector in its support to a
+    non-zero probability. This class will produce k dependent
+    discrete random variables that satisfy the given parameters.
     '''
 
     def __init__(self, sample_space, mass_function):
