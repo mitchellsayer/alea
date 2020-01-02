@@ -1,5 +1,7 @@
 from .randvar import DiscreteRandVar
 
+from functools import lru_cache
+
 import random
 import math
 import numpy as np
@@ -9,20 +11,29 @@ import copy
 class RootDiscreteRandVar(DiscreteRandVar):
 
     def __init__(self, sample_space, mass_function):
+        '''
+        Initializes a root discrete random variable using
+        a support and probability mass function. The
+        support is a set of numbers representing
+        the values that the random variable can take
+        with non-zero probability. The mass function
+        maps a number in the support to a probability.
+
+        Together, the support and mass function must
+        form a valid probability distribution. Notably,
+        the sum of all probabilities must be equal to 1.
+
+        Args:
+            sample_space: The set of values of the
+            random variable (the support)
+            mass_function: A function mapping a value in
+            the support to a non-zero probability
+        '''
+
         DiscreteRandVar.__init__(self)
         self.sample_space = copy.copy(sample_space)
         self.mass_function = mass_function
-        self.pcache = {}
         self.sample_list = None
-
-
-    def probability_of(self, x):
-        if x in self.pcache:
-            return self.pcache[x]
-        else:
-            p = self.mass_function(x)
-            self.pcache[x] = p
-            return p
 
 
     def _new_roots(self):
@@ -36,14 +47,14 @@ class RootDiscreteRandVar(DiscreteRandVar):
         # represents an independent, real-world event
         if self.sample_list is None:
             self.sample_list = list(self.sample_space)
-        probabilities = [self.probability_of(x) for x in self.sample_list]
+        probabilities = [self.mass_function(x) for x in self.sample_list]
         return np.random.choice(self.sample_list, 1, p=probabilities)[0]
 
 
     def _new_mean(self, fixed_means):
         mean = 0
         for x in self.sample_space:
-            p = self.probability_of(x)
+            p = self.mass_function(x)
             mean += p * x
         return mean
 
@@ -51,6 +62,6 @@ class RootDiscreteRandVar(DiscreteRandVar):
     def _new_variance(self):
         variance = 0
         for x in self.sample_space:
-            p = self.probability_of(x)
+            p = self.mass_function(x)
             variance += x ** 2 * p
         return variance - self.mean() ** 2

@@ -64,8 +64,7 @@ print(levered_earnings.mean())
 
 In this sense, alea is very powerful tool because it simplifies calculations
 of important concepts tied to random variables. You can construct random
-variables using simple, natural queries without having to worry about the
-mathematics behind them.
+variables using easy-to-understand abstractions & natural queries.
 
 ## Features List
 
@@ -79,6 +78,10 @@ mathematics behind them.
 * Sample mean, variance of a discrete random variable
 * Randomly sampling a discrete random variable and its children
 * Covariance calculation between two random variables
+* Random vectors containing arbitrarily related random variables
+* Discrete random vectors with joint probability distributions
+* Covariance matrix and theoretical mean of a random vector
+* Cross-covariance matrix between two random vectors
 
 See the issues section for future enhancements.
 

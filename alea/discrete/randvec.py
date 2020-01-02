@@ -12,6 +12,28 @@ class DiscreteRandVec(RandVec):
     '''
 
     def __init__(self, sample_space, mass_function):
+        '''
+        Initializes a discrete random vector using
+        a support and probability mass function. The
+        support is a set of k-length numerical vectors
+        representing the values that the random vector
+        can take with non-zero probability. The mass
+        function maps a vector in the support to a
+        probability.
+
+        Together, the support and mass function must
+        form a valid probability distribution. Notably,
+        the sum of all probabilities must be equal to 1.
+
+        Args:
+            sample_space: The set of values of the
+            random vector (the support)
+            mass_function: A function taking in a
+            tuple or numpy array (representing a vector
+            in the support) and outputing a non-zero
+            probability
+        '''
+
         sample_list = list(sample_space)
         root_pmf = lambda x : mass_function(sample_list[x])
         self.root = RootDiscreteRandVar(list(range(len(sample_space))), root_pmf)

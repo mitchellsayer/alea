@@ -182,7 +182,7 @@ class DiscreteTimesDiscreteRandVar(DiscreteRandVar):
             if srv in fixed_means:
                 srv_space = [(fixed_means[srv], 1)]
             else:
-                srv_space = [(x, srv.probability_of(x)) for x in srv.sample_space]
+                srv_space = [(x, srv.mass_function(x)) for x in srv.sample_space]
             srv_supports.append(srv_space)
         # Then, we use the law of total probability to calculate mean
         mean = 0
