@@ -9,14 +9,20 @@ import copy
 
 
 class RootDiscreteRandVar(DiscreteRandVar):
+    '''
+    A root discrete random has no parents and represents
+    the interpretation of a singular random event occurring
+    in real life. Therefore, it has a known probability
+    mass function and support that determines its mean,
+    samples, variance, and interactions with other
+    random variables.
+    '''
 
     def __init__(self, sample_space, mass_function):
         '''
-        Initializes a root discrete random variable using
-        a support and probability mass function. The
-        support is a set of numbers representing
-        the values that the random variable can take
-        with non-zero probability. The mass function
+        The support/sample space is a set of numbers
+        representing the values that the random variable
+        can take with non-zero probability. The mass function
         maps a number in the support to a probability.
 
         Together, the support and mass function must
@@ -24,9 +30,9 @@ class RootDiscreteRandVar(DiscreteRandVar):
         the sum of all probabilities must be equal to 1.
 
         Args:
-            sample_space: The set of values of the
-            random variable (the support)
-            mass_function: A function mapping a value in
+            sample_space: A set of numbers that the random
+            variable can take
+            mass_function: A function mapping every value in
             the support to a non-zero probability
         '''
 

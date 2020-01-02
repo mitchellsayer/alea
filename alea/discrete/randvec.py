@@ -1,6 +1,6 @@
 from ..randvec import RandVec
 from .root_randvar import RootDiscreteRandVar
-from .function_randvar import UnaryDiscreteRandVar
+from .unary_randvar import UnaryDiscreteRandVar
 
 class DiscreteRandVec(RandVec):
     '''
@@ -13,9 +13,7 @@ class DiscreteRandVec(RandVec):
 
     def __init__(self, sample_space, mass_function):
         '''
-        Initializes a discrete random vector using
-        a support and probability mass function. The
-        support is a set of k-length numerical vectors
+        The support is a set of k-length numerical vectors
         representing the values that the random vector
         can take with non-zero probability. The mass
         function maps a vector in the support to a
@@ -25,13 +23,14 @@ class DiscreteRandVec(RandVec):
         form a valid probability distribution. Notably,
         the sum of all probabilities must be equal to 1.
 
+        Vectors are preferrably represented by tuples. It is
+        also allowable to represent them via numpy 2D arrays.
+
         Args:
-            sample_space: The set of values of the
-            random vector (the support)
-            mass_function: A function taking in a
-            tuple or numpy array (representing a vector
-            in the support) and outputing a non-zero
-            probability
+            sample_space: A set of k-length vectors that the
+            random vector can take
+            mass_function: A function taking in a vector in
+            the support and outputing a non-zero probability
         '''
 
         sample_list = list(sample_space)
