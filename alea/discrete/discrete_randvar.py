@@ -14,9 +14,6 @@ class DiscreteRandVar(RandVar):
         2. Is constructed using other discrete random variables, which may or
         may not be roots. These constructions can include additions, multiplications,
         subtractions, and arbitrary transformations.
-
-    Attributes:
-        Inherited attributes from RandVar
     '''
 
     def _new_variance(self):

@@ -15,9 +15,6 @@ class UnaryDiscreteRandVar(DiscreteRandVar):
     The function g must be well-defined for every value
     in the support of X and g(X) must satisfy the properties
     of a discrete random variable.
-
-    Attributes:
-        Inherited attributes from DiscreteRandVar
     '''
 
     def __init__(self, rv, func):
