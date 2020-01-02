@@ -17,14 +17,6 @@ class RandVar(ABC):
     variables. However, its distribution is not affected by any
     child random variables. Thus, if any child random variables are
     garbage collected, it will not affect this random variable.
-
-    Attributes:
-        saved_sample: The most recently generated numerical sample
-        saved_mean: The mean of this random variable (cached)
-        saved_variance: The variance of this random variable (cached)
-        saved_covariances: Covariances with other random variables (cached)
-        parents: Parent random variables; this random variable depends on them for properties
-        children: Child random variables; any child has this random variable as one of its parents
     '''
 
     def __init__(self):
@@ -137,7 +129,7 @@ class RandVar(ABC):
             trials: The number of samples to take
 
         Returns:
-            An approximation of the mean
+            An approximation of the variance
         '''
 
         mean = self.sample_mean(trials)

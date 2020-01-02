@@ -5,6 +5,13 @@ import math
 
 
 class BernoulliRandVar(RootDiscreteRandVar):
+    '''
+    A Bernoulli random variable models an experiment
+    where the outcome can only be success or failure and
+    success occurs with probability p. The variable
+    outputs 1 with probability p and 0 with probability
+    1 - p.
+    '''
 
     def __init__(self, success_rate):
 
@@ -31,6 +38,12 @@ class BernoulliRandVar(RootDiscreteRandVar):
 
 
 class BinomialRandVar(RootDiscreteRandVar):
+    '''
+    A Binomial random variable models a sequence of
+    n Bernoulli random variables where success occurs
+    with probability p. The variable outputs how
+    many successes occurred.
+    '''
 
     def __init__(self, trials, success_rate):
 
@@ -41,7 +54,7 @@ class BinomialRandVar(RootDiscreteRandVar):
                     n = int(n)
                 if math.isclose(k, math.floor(k)):
                     k = int(k)
-                if 0 <= k <= n:
+                if 0 <= k <= n: 
                     ntok = 1
                     ktok = 1
                     for t in range(1, min(k, n - k) + 1):
@@ -76,6 +89,12 @@ class BinomialRandVar(RootDiscreteRandVar):
 
 
 class UniformDiscreteRandVar(RootDiscreteRandVar):
+    '''
+    A uniform discrete random variable is a simplistic model of
+    an experiment where there are n distinct outcomes, each outcome
+    occurs with the same probability, and every outcome is mapped to
+    a distinct number.
+    '''
 
     def __init__(self, sample_space):
         p = 1 / len(sample_space)

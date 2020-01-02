@@ -1,4 +1,4 @@
-from .discrete_randvar import DiscreteRandVar
+from .randvar import DiscreteRandVar
 
 import copy
 import itertools
@@ -15,9 +15,6 @@ class UnaryDiscreteRandVar(DiscreteRandVar):
     The function g must be well-defined for every value
     in the support of X and g(X) must satisfy the properties
     of a discrete random variable.
-
-    Attributes:
-        Inherited attributes from DiscreteRandVar
     '''
 
     def __init__(self, rv, func):
@@ -46,7 +43,7 @@ class UnaryDiscreteRandVar(DiscreteRandVar):
             if rrv in fixed_means:
                 rrv_space = [(fixed_means[rrv], 1)]
             else:
-                rrv_space = [(x, rrv.probability_of(x)) for x in rrv.sample_space]
+                rrv_space = [(x, rrv.mass_function(x)) for x in rrv.sample_space]
             rrv_supports.append(rrv_space)
         mean = 0
         for combination in itertools.product(*rrv_supports):
