@@ -26,7 +26,7 @@ or not that action is considered desirable. Observe the following scenario.
 
 With alea, you could model this scenario pretty easily:
 
-```
+```python3
 from alea.discrete import RootDiscreteRandVar
 
 A = RootDiscreteRandVar({1000, -150}, lambda x : 0.4 if x == 1000 else 0.6)
@@ -37,7 +37,7 @@ print(earnings.mean())
 
 Alternatively, you could represent this as:
 
-```
+```python3
 from alea.discrete import BinomialRandVar
 
 earnings = BinomialRandVar(4, 0.4) * 1150 - 150
@@ -54,7 +54,7 @@ What if the scenario changes?
 > ratio independently of any positions you are taking. What's your earnings 
 > average now?
 
-```
+```python3
 from alea.discrete import UniformDiscreteRandVar
 
 L = UniformDiscreteRandVar({4, 5, 6})
