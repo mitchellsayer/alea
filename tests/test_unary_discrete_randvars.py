@@ -14,7 +14,7 @@ class TestUnaryMultiplication:
         g = lambda x : x * 50
         gX = UnaryDiscreteRandVar(X, g)
         gX2 = X * 50
-        assert(almost_equal(gX.sample_mean(), gX2.sample_mean(), 0.5))
+        assert(almost_equal(gX.sample_mean(), gX2.sample_mean(), 1))
 
 
     def test_mean(self):
@@ -40,7 +40,7 @@ class TestUnaryAddition:
         g = lambda x : x + 50
         gX = UnaryDiscreteRandVar(X, g)
         gX2 = X + 50
-        assert(almost_equal(gX.sample_mean(), gX2.sample_mean(), 0.5))
+        assert(almost_equal(gX.sample_mean(), gX2.sample_mean(), 1))
 
 
     def test_mean(self):

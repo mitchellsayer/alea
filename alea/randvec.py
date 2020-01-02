@@ -3,42 +3,44 @@ import numpy as np
 
 class RandVec:
     '''
-    Represents a basic abstraction around a random variable.
-    A random variable can be sampled to produce some number,
-    has information about its mean, variance, and covariance with
-    other random variables, and can be added/multiplied/transformed
-    to produce new random variables.
+    Represents a basic abstraction around a random vector.
+    A random vector is a k-length vector of random variables.
+    Like with random variables, random vectors can be sampled and
+    their mean and variance can be calculated.
     '''
 
     def __init__(self, randvars):
         self.randvars = randvars
 
 
-    def sample(self):
+    def __len__(self):
         '''
-        Returns the most recently generated numerical sample for this random variable.
-        Will generate the sample if none exist.
+        The length of the random vector. Referred to as 'k'.
 
         Returns:
-            The sample as a number
+            The number of random variables in the vector
         '''
-        return [x.sample() for x in self.randvars]
+
+        return len(self.randvars)
+
+
+    def sample(self):
+        '''
+        Returns the most recently generated numerical sample for
+        this random vector. Will generate the sample if none exist.
+
+        Returns:
+            The sample as a k-length numpy array
+        '''
+
+        return np.asarray([x.sample() for x in self.randvars])
 
 
     def resample(self):
         '''
-        Generates a new sample for this random variable.
-        This may cause other random variables to re-sample as well in the interest of
-        consistency. Specifically, the resampling procedure works as follows:
-            1. Find all ancestors of this random variable that are roots. A root random
-            variable has no parents and represents a completely independent event
-            occurring in nature.
-            2. Resample these roots.
-            3. Propogate the result of the roots up through the graph. The propogation
-            will occur in topological order, since this graph is a DAG. This ensures that,
-            before a random variable is resampled, all of its parents will have been
-            resampled. Thus, the given random variable can access its parent's samples
-            to perform its own calculations.
+        Generates a new sample for this random variable, causing
+        whatever random variables are in the vector to resample
+        as well.
         '''
 
         for x in self.randvars:
@@ -47,63 +49,35 @@ class RandVec:
 
     def sample_mean(self, trials=10000):
         '''
-        Performs a point estimate of the mean by simply
-        sampling for {trial} amount of times and then averaging the
-        samples. This will always work because of the law of
-        large numbers.
-
-        Note that a large number of samples will result in better
-        approximation of the mean but will take more time to generate.
-        A random variable will a high variance will converge to the
-        sampled mean more slowly.
+        For each random variable, a point estimate of the variable's
+        mean is calculated. This produces a vector of sample means,
+        where the ith entry is the sample mean of the ith random
+        variable.
 
         Args:
-            trials: The number of samples to take
+            trials: The number of samples to use in calculating
+            each average
 
         Returns:
-            An approximation of the mean
+            An approximation of the mean as a k-length numpy array
         '''
 
-        return [x.sample_mean(trials) for x in self.randvars]
-
-
-    def sample_variance(self, trials=10000):
-        '''
-        Performs a point estimate of the variance after calculating
-        an approximate mean. As with the sample mean, a large
-        number of samples will result in better approximation of
-        the variance but at a significant time cost.
-
-        Args:
-            trials: The number of samples to take
-
-        Returns:
-            An approximation of the mean
-        '''
-
-        return [x.sample_variance(trials) for x in self.randvars]
+        return np.asarray([x.sample_mean(trials) for x in self.randvars])
 
 
     def mean(self, fixed_means={}):
         '''
-        Returns the theoretical mean. This is calculated using complex
-        numerical calculations. However, not only is it numerically
-        precise, but it represents what the sample average should
-        converge to. The theoretical mean is cached upon calculation because
-        random variable distributions are immutable.
-
-        The {fixed_means} dictionary is a mapping from random variables
-        to numbers. It is used for internal calcuations, specifically in
-        the multiplication of dependent random variables. It allows us
-        to 'fix' a random variable's mean to a certain value, essentially
-        bypassing any normal recursive calculations that would be performed.
-        As a user, you will likely not need to use this dictionary.
+        The theoretical mean of a random vector is the vector such
+        that the ith entry is the theoretical mean of the ith random
+        variable. This takes into account fixed means as well.
 
         Args:
-            fixed_means: A dictionary mapping random variables to preset means
+            fixed_means: A dictionary mapping random variables to
+            preset means
 
         Returns:
-            The theoretical mean of the random variable
+            The theoretical mean of the random vector as a k-length
+            numpy array
         '''
 
         return [x.mean(fixed_means) for x in self.randvars]
@@ -111,11 +85,18 @@ class RandVec:
 
     def variance(self):
         '''
-        Returns the theoretical variance. Like the mean, it is acquired using
-        complex numerical calculations. It is also cached after being calculated.
+        Calculates the variance matrix of this random vector.
+        Also known as the covariance or variance/covariance matrix.
+
+        The variance matrix of a vector has interesting properties,
+        namely that it is symmetric and postive-definite due to
+        the properties of covariance. A vector of independent
+        random variables, each with variance of v will produce
+        vI where I is the k-by-k identity matrix.
 
         Returns:
-            The theoretical variance of the random variable
+            The variance matrix of the random vector as a k-by-k
+            numpy matrix
         '''
 
         return self.cross_covariance(self)
@@ -123,13 +104,19 @@ class RandVec:
 
     def cross_covariance(self, othervec):
         '''
-        Given this random variable {self} and another random variable {rv},
-        calculates the covariance between the two random variables. Covariances
-        are also cached and the cache space is compressed by taking advantage
-        of the fact that covariance is symmetric between two random variables.
+        Calculates the cross-covariance matrix between this random
+        vector and the given random vector. The (i, j)th entry of
+        this matrix will be the covariance between the ith random
+        variable of this vector and the jth random variable of the
+        other vector.
+
+        The resulting matrix will be m rows and n columns where m
+        is the length of this vector and n is the length of the
+        other vector.
 
         Returns:
-            The theoretical covariance between this random variable and another
+            The cross covariance matrix between this and the
+            given random vector as a m-by-n numpy matrix
         '''
 
         vrnce = np.empty((len(self.randvars), len(othervec.randvars)))

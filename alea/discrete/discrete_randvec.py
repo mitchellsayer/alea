@@ -3,6 +3,7 @@ from .discrete_randvar import DiscreteRandVar
 from .root_randvar import RootDiscreteRandVar
 from .function_randvar import UnaryDiscreteRandVar
 
+import copy
 
 class DiscreteRandVec(RandVec):
     '''
@@ -18,10 +19,15 @@ class DiscreteRandVec(RandVec):
 
     def __init__(self, sample_space, mass_function):
         sample_list = list(sample_space)
-        root_pmf = lambda idx : mass_function(sample_list[idx])
-        root = RootDiscreteRandVar(list(range(len(sample_space))), root_pmf)
+        root_pmf = lambda x : mass_function(sample_list[x])
+        self.root = RootDiscreteRandVar(list(range(len(sample_space))), root_pmf)
         randvars = []
-        for i in range(len(sample_list[0])):
-            transformation = lambda idx : sample_list[idx][i]
+        for idx in range(len(sample_list[0])):
+            def transformation(x, i=idx):
+                return sample_list[x][i]
             randvars.append(UnaryDiscreteRandVar(root, transformation))
         RandVec.__init__(self, randvars)
+
+
+    def resample(self):
+        self.root.resample()
