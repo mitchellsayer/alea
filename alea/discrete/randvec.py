@@ -1,5 +1,4 @@
 from ..randvec import RandVec
-from .discrete_randvar import DiscreteRandVar
 from .root_randvar import RootDiscreteRandVar
 from .function_randvar import UnaryDiscreteRandVar
 
@@ -25,7 +24,7 @@ class DiscreteRandVec(RandVec):
         for idx in range(len(sample_list[0])):
             def transformation(x, i=idx):
                 return sample_list[x][i]
-            randvars.append(UnaryDiscreteRandVar(root, transformation))
+            randvars.append(UnaryDiscreteRandVar(self.root, transformation))
         RandVec.__init__(self, randvars)
 
 

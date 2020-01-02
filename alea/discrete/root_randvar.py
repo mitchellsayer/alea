@@ -1,4 +1,4 @@
-from .discrete_randvar import DiscreteRandVar
+from .randvar import DiscreteRandVar
 
 import random
 import math
